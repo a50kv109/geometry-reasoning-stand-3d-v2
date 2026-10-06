@@ -1,0 +1,46 @@
+{
+  "name": "dynamic-3d-geometry-reasoning-stand",
+  "description": "Deterministic geometric reasoning, temporal observation, verification, and minimal educational visualization for a dynamic general tetrahedron inscribed in a sphere.",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "clean": "rm -rf dist server.js",
+    "test": "npm run test:all",
+    "test:m1": "tsx src/tests/m1_canonical_state.test.ts",
+    "test:client": "tsx src/tests/m1_5_visual_client.test.ts",
+    "test:layout": "tsx src/tests/m1_6_workspace_layout.test.ts",
+    "test:guides": "tsx src/tests/m1_7_scale_and_guides.test.ts",
+    "test:scale": "tsx src/tests/scale_dependency_consistency.test.ts && tsx src/tests/scale_dependency_irregular.test.ts",
+    "test:agent": "tsx src/tests/agent_readiness_smoke.test.ts",
+    "test:metrics": "tsx src/tests/regular_tetrahedron_metric.test.ts",
+    "test:epistemic": "tsx src/tests/epistemic_status_orthogonal.test.ts",
+    "test:all": "tsx src/tests/m1_canonical_state.test.ts && tsx src/tests/m1_5_visual_client.test.ts && tsx src/tests/m1_6_workspace_layout.test.ts && tsx src/tests/m1_7_scale_and_guides.test.ts && tsx src/tests/scale_dependency_consistency.test.ts && tsx src/tests/scale_dependency_irregular.test.ts && tsx src/tests/regular_tetrahedron_metric.test.ts && tsx src/tests/epistemic_status_orthogonal.test.ts && tsx src/tests/agent_readiness_smoke.test.ts",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^2.4.0",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "lucide-react": "^0.546.0",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "vite": "^6.2.3",
+    "express": "^4.21.2",
+    "dotenv": "^17.2.3",
+    "motion": "^12.23.24"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "esbuild": "^0.25.0",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3",
+    "@types/express": "^4.17.21"
+  }
+}

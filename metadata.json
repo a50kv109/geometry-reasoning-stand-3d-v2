@@ -1,0 +1,6 @@
+{
+  "name": "Dynamic 3D Geometry Reasoning Stand",
+  "description": "Deterministic geometric reasoning, temporal observation, verification, and minimal educational visualization for a dynamic general tetrahedron inscribed in a sphere.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
