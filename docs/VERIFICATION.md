@@ -67,7 +67,7 @@ An `AGENT_ASSERTION` can never be used as a premise to verify another `AGENT_ASS
 
 ## 5. Deterministic Test Suite
 
-The repository contains 50 automated deterministic tests organized into four suites:
+The repository contains 105 automated deterministic unit and integration tests organized across 10 suites:
 
 1. **`src/tests/m1_canonical_state.test.ts` (17 Tests: T01 - T17)**
    - Sphere creation, non-finite rejection, outside-sphere rejection without silent projection.
@@ -84,5 +84,21 @@ The repository contains 50 automated deterministic tests organized into four sui
    - Visual scale factor invariance (geometry and signature unchanged at 100%, 75%, 50%).
    - Exact latitude and longitude derivation across all four vertices.
    - Coordinate guide containment on $S^2$, pole singularity convention ($\lambda = 0$ at $\phi = \pm 90^\circ$), periodic wrap-around.
+5. **`src/tests/scale_dependency_consistency.test.ts` (6 Tests)**
+   - PAT-27 dimensional scaling verification across regular geometries ($L \propto R, A \propto R^2, V \propto R^3$).
+6. **`src/tests/scale_dependency_irregular.test.ts` (6 Tests)**
+   - PAT-27 scale invariance across arbitrary irregular tetrahedra.
+7. **`src/tests/regular_tetrahedron_metric.test.ts` (5 Tests)**
+   - Analytical closed-form metric checks: edge lengths ($4R/\sqrt{6}$), face area ($2\sqrt{3}R^2/3$), volume ($8\sqrt{3}R^3/27$).
+8. **`src/tests/epistemic_status_orthogonal.test.ts` (7 Tests)**
+   - Epistemic taxonomy orthogonality, confidence score monotonicity, hypothesis vs. fact wrappers.
+9. **`src/tests/agent_readiness_smoke.test.ts` (11 Tests)**
+   - Untrusted agent contract checks: oracle state immutability, truth validation, false claim refutation, batch evaluations.
+10. **`src/tests/lvg_dlvm_gds_temporal.test.ts` (10 Tests: LVG-01 to Temporal-03)**
+    - LVG intrinsic geometry: Gram matrix symmetry, solid angle $\Omega(v)$ via Oosterom-Strackee, translation/scale invariance.
+    - DLVM 4-manifold derivation and shared-edge anti-parallelism $\mathbf{u}_{AB}^{(A)} = -\mathbf{u}_{BA}^{(B)}$.
+    - GDS snapshot aggregation without state mutation.
+    - Temporal transition engine: strict monotonic time ordering ($t_1 > t_0$), delta differentials, and corruption detection.
 
-All 50 tests are deterministic, run in headless mode via `tsx`, and execute in less than 50 milliseconds.
+All 105 tests are 100% deterministic, execute in headless mode via `tsx`, and complete in under 60 milliseconds.
+

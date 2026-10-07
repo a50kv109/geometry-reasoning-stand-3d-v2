@@ -82,6 +82,9 @@ The system strictly decouples its conceptual layers:
 - **Orientation & Degeneracy Detection:** Real-time classification of positive right-handed volume (`VALID_POSITIVE`), valid negative left-handed volume (`VALID_NEGATIVE`), and coplanar degeneracy (`DEGENERATE`).
 - **Scale-Normalized Regularity Detection:** Dimensionless regularity invariant $\frac{L_{\max} - L_{\min}}{R} \le 10^{-4}$ guaranteeing scale invariance across all radii $R$.
 - **Two-Column Workstation Ergonomics:** Edge-to-edge desktop workspace pairing a persistent 3D viewport (~65%) with an independently scrollable 7-section reasoning sidebar (~35%).
+- **Interactive Local Spherical Manifold (LSM) Inspector:** Dual-mode inspector (docked in sidebar and floating on-canvas HUD) visualizing incident edges on local unit sphere $S^2(v)$ via a physical globe on stand model ($\text{Geometry State} = \text{const}$, view rotation in hands via drag, Yaw/Pitch sliders, presets), Gram determinants, planar angles, and solid angle $\Omega(v)$ via Oosterom-Strackee.
+- **Dynamic Reasoning Engine (LVG / DLVM / GDS):** Local trihedral cone analysis, shared-edge anti-parallelism verification $\mathbf{u}_{AB}^{(A)} = -\mathbf{u}_{BA}^{(B)}$, and atomic diagnostic snapshots without state mutation.
+- **Differential Temporal Observation:** Strictly monotonic transition tracking ($t_1 > t_0$) measuring volume, area, and displacement differentials across state evolutions.
 - **Engineering Diagnostics Accordion:** Inspection of raw canonical coordinates, live dimension-scaled tolerances, and the deterministic 32-bit FNV-1a `geometrySignature`.
 
 ---
@@ -132,8 +135,11 @@ The stand strictly separates four orthogonal status domains:
 | **Per-Vertex Coordinate Guides** | M1.7 | **IMPLEMENTED** | 16 automated tests (`m1_7_scale_and_guides.test.ts`) |
 | **Incident Dependency Highlighting** | M1.5, M1.6 | **IMPLEMENTED** | Active, affected, and invariant subgraph split |
 | **Full Recomputation Baseline Oracle** | M1, M3 | **IMPLEMENTED** | Ground-truth mathematical evaluator |
+| **Dynamic Reasoning Layer (LVG / DLVM / GDS)** | M1.8 | **IMPLEMENTED** | 10 verified contracts (`lvg_dlvm_gds_temporal.test.ts`) |
+| **Dual-Mode LSM / LVG Inspector** | M1.8 | **IMPLEMENTED** | Embedded sidebar panel + floating canvas HUD overlay |
+| **Temporal Measurement Engine** | M6 | **IMPLEMENTED** | Monotonic ordering & delta differentials (`geometryTemporal.ts`) |
 | **Face Center Classification (4-State)** | M4 | **PLANNED** | Defined in Package 03; basic normals live |
-| **Temporal Model & Scrubber** | M6 | **PLANNED** | Signatures implemented; timeline scrubber in M6 |
+| **Temporal Scrubber UI Timeline** | M6 | **PLANNED** | State math live; interactive scrub slider in M6 |
 | **Public Agent API (`VERIFY_RESULT`)** | M7, M8 | **PARTIAL** | Engine validation live; network API in M8 |
 | **Research Laboratory (81 Face Profiles)** | M9 | **RESEARCH** | Formulated in `docs/RESEARCH.md` |
 
@@ -142,7 +148,7 @@ The stand strictly separates four orthogonal status domains:
 ## 8. Known Limitations
 
 1. **Local Face-Center Classifications (M4):** The local 4-state classification of the origin $O$ relative to the 4 triangular face planes is mathematically specified but not yet integrated into the live sidebar UI.
-2. **Temporal History Timeline (M6):** Snapshots and signatures are calculated on every transition, but the interactive multi-step scrubber UI is scheduled for Milestone M6.
+2. **Temporal Scrubber Timeline UI (M6):** Snapshots, transition diffs, and signatures are computed dynamically by `geometryTemporal.ts`, but an interactive multi-step scrubber slider UI is scheduled for Milestone M6.
 3. **External Network API (M8):** The verification operations (`VERIFY_RESULT`, `VERIFY_STEP`) are executed internally by the engine, but a public REST/JSON-RPC server endpoint for headless external agents is not yet bound to an external port.
 
 ---
@@ -174,14 +180,19 @@ npm run lint
 
 ### Running Automated Tests
 ```bash
-# Run all deterministic test suites (50 tests)
+# Run all deterministic test suites (10 suites, 105 tests)
 npm run test:all
 
 # Or run individual milestone suites:
-npm run test:m1       # M1 Canonical Core suite (17 tests)
-npm run test:client   # M1.5 Visual Client suite (10 tests)
-npm run test:layout   # M1.6 Layout & Ergonomics suite (7 tests)
-npx tsx src/tests/m1_7_scale_and_guides.test.ts # M1.7 Scale & Guides suite (16 tests)
+npm run test:m1        # M1 Canonical Core suite (17 tests)
+npm run test:client    # M1.5 Visual Client suite (10 tests)
+npm run test:layout    # M1.6 Layout & Ergonomics suite (7 tests)
+npm run test:guides    # M1.7 Scale & Guides suite (16 tests)
+npm run test:lvg       # M1.8 Dynamic Reasoning LVG/DLVM/GDS suite (10 tests)
+npm run test:scale     # PAT-27 Scale Invariance suites (12 tests)
+npm run test:metrics   # Inscribed regular metric suite (5 tests)
+npm run test:epistemic # Epistemic orthogonality suite (7 tests)
+npm run test:agent     # Agent readiness & oracle boundary suite (11 tests)
 ```
 
 ---
@@ -191,21 +202,49 @@ npx tsx src/tests/m1_7_scale_and_guides.test.ts # M1.7 Scale & Guides suite (16 
 ```text
 ├── docs/
 │   ├── architecture-packages/           # Archival records of Transfer Packages 01–06
+│   ├── research/                        # Dynamic reasoning & laboratory specs
+│   │   ├── DYNAMIC_REASONING_ARCHITECTURE.md
+│   │   ├── LVG_001.md
+│   │   ├── DLVM_001.md
+│   │   └── GDS_AND_TEMPORAL.md
 │   ├── README.md                        # Complete Documentation Index
-│   ├── ARCHITECTURE.md                  # System overview, 3-layer state, data flow
+│   ├── ARCHITECTURE.md                  # System overview, state model, dynamic reasoning
+│   ├── LSM_INSPECTOR.md                 # Local Spherical Manifold Inspector specification
 │   ├── GEOMETRIC_MODEL.md               # S², tetrahedron, signed volume, regularity
 │   ├── INTERACTION.md                   # 3D viewport, guides, scale, controls
 │   ├── REASONING_MODEL.md               # Causal dependencies & baseline oracle
-│   ├── VERIFICATION.md                  # Epistemic enums, provenance, tests
+│   ├── VERIFICATION.md                  # Epistemic enums, provenance, 10 test suites
 │   ├── RESEARCH.md                      # Open research candidates & promotion rules
 │   ├── DEVELOPMENT.md                   # Development guide and coding standards
 │   └── ROADMAP.md                       # Milestone progress (M0–M10)
 ├── src/
-│   ├── core/                            # Authoritative Mathematical Core (Frozen)
+│   ├── core/                            # Authoritative Mathematical Core
+│   │   ├── types.ts                     # Canonical geometries, topologies, epistemic enums
+│   │   ├── geometryState.ts             # State constructor & spatial checks
+│   │   ├── topology.ts                  # Fixed 4V / 6E / 4F topology
+│   │   ├── metrics.ts                   # Chords, face areas, signed volume, centroid
+│   │   ├── representation.ts            # Spherical (lat/lon) coordinate bijections
+│   │   ├── signature.ts                 # Metadata-free FNV-1a 32-bit state hash
+│   │   ├── tolerances.ts                # Scale-aware tolerance engine (Pkg 06)
+│   │   ├── lvg.ts                       # Local Vertex Geometry (Gram, Ω, angles)
+│   │   ├── dlvm.ts                      # Directed Local Vertex Manifold (u_AB = -u_BA)
+│   │   ├── gds.ts                       # Geometric Diagnostic Snapshot (SSOT isolated)
+│   │   ├── geometryTemporal.ts          # Strictly monotonic temporal transitions
+│   │   ├── epistemic.ts                 # Fact / Hypothesis / Provenance tagging
+│   │   └── agentInterface.ts            # Oracle evaluation boundary
 │   ├── visualization/                   # 3D Canvas Rendering & Causal Projection
+│   │   └── renderer3d.ts                # Depth-sorted canvas projection & guides
 │   ├── components/                      # React Workstation Components
-│   └── tests/                           # Deterministic Automated Test Suites
-├── CHANGELOG.md                         # Version history & milestone logs
+│   │   ├── GeometryViewport.tsx         # Primary 3D canvas with floating LSM trigger
+│   │   ├── LsmInspector.tsx             # Dual-mode Local Spherical Manifold inspector
+│   │   ├── VertexControlPanel.tsx       # Sidebar active vertex & embedded LSM
+│   │   ├── MeasurementPanel.tsx         # Metric readout & orientation classification
+│   │   ├── LearningPanel.tsx            # Pedagogical causal narrative
+│   │   ├── AgentTestPanel.tsx           # Autonomous agent smoke test panel
+│   │   └── DebugPanel.tsx               # Canonical coordinate & tolerance inspector
+│   └── tests/                           # 10 Deterministic Automated Test Suites
+├── CHANGELOG.md                         # Version history & milestone logs (v0.2.0)
+├── STATUS.md                            # Live project operational status
 ├── index.html                           # Synchronized HTML entry point
 ├── metadata.json                        # Application metadata
 └── package.json                         # Build & test scripts

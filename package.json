@@ -18,7 +18,8 @@
     "test:agent": "tsx src/tests/agent_readiness_smoke.test.ts",
     "test:metrics": "tsx src/tests/regular_tetrahedron_metric.test.ts",
     "test:epistemic": "tsx src/tests/epistemic_status_orthogonal.test.ts",
-    "test:all": "tsx src/tests/m1_canonical_state.test.ts && tsx src/tests/m1_5_visual_client.test.ts && tsx src/tests/m1_6_workspace_layout.test.ts && tsx src/tests/m1_7_scale_and_guides.test.ts && tsx src/tests/scale_dependency_consistency.test.ts && tsx src/tests/scale_dependency_irregular.test.ts && tsx src/tests/regular_tetrahedron_metric.test.ts && tsx src/tests/epistemic_status_orthogonal.test.ts && tsx src/tests/agent_readiness_smoke.test.ts",
+    "test:lvg": "tsx src/tests/lvg_dlvm_gds_temporal.test.ts",
+    "test:all": "tsx src/tests/m1_canonical_state.test.ts && tsx src/tests/m1_5_visual_client.test.ts && tsx src/tests/m1_6_workspace_layout.test.ts && tsx src/tests/m1_7_scale_and_guides.test.ts && tsx src/tests/scale_dependency_consistency.test.ts && tsx src/tests/scale_dependency_irregular.test.ts && tsx src/tests/regular_tetrahedron_metric.test.ts && tsx src/tests/epistemic_status_orthogonal.test.ts && tsx src/tests/agent_readiness_smoke.test.ts && tsx src/tests/lvg_dlvm_gds_temporal.test.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

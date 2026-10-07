@@ -87,10 +87,15 @@ The sidebar organizes reasoning into seven numbered sections:
 - Persistent tabs for vertices **A**, **B**, **C**, and **D**.
 - Selecting a tab synchronizes focus in the 3D viewport, highlights incident elements, and updates numerical controls.
 
-### Section 2: Position & Coordinate Controls
+### Section 2: Position & Coordinate Controls + Local Spherical Manifold (LSM) Inspector
 - **Spherical Controls:** Dual sliders for Latitude $\phi \in [-90^\circ, +90^\circ]$ and Longitude $\lambda \in [0^\circ, 360^\circ)$.
 - **Cartesian Display:** Displays authoritative Cartesian coordinates $(x, y, z) \in \mathbb{R}^3$.
 - **Surface Check:** Displays deviation $|\|P - O\| - R|$, verifying strict adherence to $S^2$.
+- **Глобус локальной угловой геометрии (`[ 🌐 Глобус углов {id} ]`):**
+  - Toggles embedded inspection of local vertex angular geometry inside Section 2 (open by default).
+  - Also accessible via the floating `[ 🌐 Глобус углов {id} ]` button directly on the 3D canvas HUD.
+  - Interactive physical globe on stand model: user rotates the viewing model in hands (Yaw / Pitch sliders, direct drag, presets «Спереди», «Полюс N», «Изо», «↺»), while canonical geometry state remains strictly invariant.
+  - Live numerical display of incident edge directions $\mathbf{u}_{vj}$, chord lengths $|e|$, solid angle $\Omega(v)$ via Oosterom-Strackee, Gram determinant $\det(G)$, and planar face angles $\alpha_{jk}$.
 
 ### Section 3: Geometric Measurements
 - **6 Edge Chords:** Lengths $L_{AB}, L_{AC}, L_{AD}, L_{BC}, L_{BD}, L_{CD}$ updated in real time.

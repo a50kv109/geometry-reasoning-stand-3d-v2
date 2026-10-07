@@ -16,10 +16,17 @@ Welcome to the documentation for the **Dynamic 3D Geometry Reasoning Stand**, a 
 
 ### Human Interaction & Reasoning
 * **[User Interaction & Visual Workbench](INTERACTION.md)**: Viewport controls, visual scale factor, direct on-sphere raycasting, per-vertex coordinate guides, and the 7-section information flow.
+* **[Local Spherical Manifold (LSM) & LVG Inspector](LSM_INSPECTOR.md)**: Intrinsic local vertex geometry, unit sphere $S^2(v)$ projection, Gram matrices, solid angle $\Omega(v)$ via Oosterom-Strackee, dual embedded/floating HUD presentation.
 * **[Reasoning Model & Causal Dependencies](REASONING_MODEL.md)**: Causal propagation graphs, incident vs invariant topological branches, and the definition of the baseline recomputation oracle.
 
+### Dynamic Reasoning & Research
+* **[Dynamic Reasoning Architecture](research/DYNAMIC_REASONING_ARCHITECTURE.md)**: Functional pipeline flow from Canonical State through LVG, DLVM, GDS, and Temporal Engine.
+* **[LVG Specification](research/LVG_001.md)**: Local Vertex Geometry, Gram matrices, planar & dihedral angles, solid angle invariants.
+* **[DLVM Specification](research/DLVM_001.md)**: Directed Local Vertex Manifold, shared-edge anti-parallelism $u_{AB} = -u_{BA}$.
+* **[GDS & Temporal Specification](research/GDS_AND_TEMPORAL.md)**: Geometric Diagnostic Snapshots and strictly monotonic temporal observation.
+
 ### Verification, Research & Roadmap
-* **[Verification Architecture & Protocol](VERIFICATION.md)**: Verification boundary, epistemic status taxonomies, provenance tracking, anti-circular safeguards, and the 50 deterministic tests.
+* **[Verification Architecture & Protocol](VERIFICATION.md)**: Verification boundary, epistemic status taxonomies, provenance tracking, anti-circular safeguards, and the 10 automated test suites (105 tests).
 * **[Research Laboratory & Open Questions](RESEARCH.md)**: Separation of Core and Laboratory, active research candidates (including the 81 face-center profile realizability problem), and candidate promotion rules.
 * **[Development & Contribution Guide](DEVELOPMENT.md)**: Prerequisites, build scripts, development server, testing commands, and coding guidelines.
 * **[Project Milestone Roadmap](ROADMAP.md)**: Progress tracking across Milestones M0 through M10.

@@ -13,11 +13,12 @@ The **Dynamic 3D Geometry Reasoning Stand** follows an incremental, verified mil
 | **M1.5** | Human Visual Workbench | Interactive 3D canvas viewport, direct vertex dragging, orbit camera, causal highlighting | **COMPLETED** | 10 Tests passing (`m1_5_visual_client.test.ts`) |
 | **M1.6** | Workspace Layout Reconstruction | Two-column workstation layout (~65% / ~35%), 7-section structured information flow | **COMPLETED** | 7 Tests passing (`m1_6_workspace_layout.test.ts`) |
 | **M1.7** | Geometric Scale & Coordinate Guides | Visual scale controls (Fit, 100%, 75%, 50%), per-vertex latitude parallels & longitude meridians on $S^2$ | **COMPLETED** | 16 Tests passing (`m1_7_scale_and_guides.test.ts`) |
+| **M1.8** | Dynamic Reasoning & LSM Inspector | Local Vertex Geometry (LVG), DLVM, GDS, Temporal transitions, dual-mode LSM inspector HUD with Physical Globe model | **COMPLETED** | 10 Tests passing (`lvg_dlvm_gds_temporal.test.ts`) |
 | **M2** | Combinatorial Topology Deepening | Generalized simplicial complex structures, multi-tetrahedra graphs | **PLANNED** | Scheduled post-first-release |
 | **M3** | Deterministic Engine Refinement | Comprehensive face normal classifications, extended metric tensors | **CURRENT** | Core chord & area formulas live in `src/core/metrics.ts` |
 | **M4** | Face Geometry & Center Classification | 4-state local face-center classification (`CENTER_IN_FACE`, etc.), 4-face profile vector | **PLANNED** | Mathematical contracts defined in Package 03 |
 | **M5** | Dependency Graph & Semantic Impact Engine | Extended graph queries, formal impact diff trees, dependency export | **PARTIAL** | Incident topology graph live in `causalModel.ts` |
-| **M6** | Temporal Trace & History Engine | Multi-step state scrubber, undo/redo history ring buffer, transition delta logs | **PLANNED** | State signature and snapshot schema defined |
+| **M6** | Temporal Trace & History Engine | Multi-step state scrubber, undo/redo history ring buffer, transition delta logs | **PARTIAL** | Transition & trace math live in `geometryTemporal.ts`; UI timeline scrubber planned |
 | **M7** | Verification Engine & Epistemic Reasoner | Automated claim evaluator (`VERIFY_RESULT`, `VERIFY_STEP`, `CONSISTENCY_CHECK`) | **PARTIAL** | Validation and epistemic enums live in `src/core/types.ts` |
 | **M8** | Public Agent Protocol Interface | Domain-pure JSON-RPC / REST API for external AI agent interaction | **PLANNED** | Protocol schemas specified in Package 05 |
 | **M9** | Research Laboratory & Candidate Life-Cycle | Realizability explorer for the 81 face-center profile combinations | **RESEARCH** | Formulated in `docs/RESEARCH.md` |
@@ -27,7 +28,7 @@ The **Dynamic 3D Geometry Reasoning Stand** follows an incremental, verified mil
 
 ## Detailed Status of Current Implementation
 
-### Completed Capabilities (M1 – M1.7)
+### Completed Capabilities (M1 – M1.8)
 - **Immutable Canonical State:** Cartesian coordinates $O, R, A, B, C, D$ frozen against external side effects.
 - **Surface Membership:** Strict verification $\|V_i - O\| = R$ with explicit rejection of out-of-bounds points (no silent projection).
 - **Simplicial Topology:** Persistent labeled vertices $A, B, C, D$, 6 straight chords, 4 planar triangular faces.
@@ -39,9 +40,12 @@ The **Dynamic 3D Geometry Reasoning Stand** follows an incremental, verified mil
 - **Ergonomic Two-Column Layout:** Edge-to-edge desktop utilization with independent sidebar scrolling.
 - **Visual Scale Factor:** Fit, 100%, 75%, and 50% view scaling without mutating geometry.
 - **Per-Vertex Coordinate Guides:** Real-time latitude parallels and longitude meridians rendered on $S^2$.
-- **Automated Test Suite:** 50 deterministic headless tests passing in $< 50\text{ ms}$.
+- **Dynamic Reasoning Layer (LVG / DLVM / GDS):** Local trihedral cone invariants, Gram matrices, solid angle $\Omega(v)$ via Oosterom-Strackee, shared-edge anti-parallelism validation, and atomic diagnostic snapshots.
+- **Temporal Observation Math:** Strict monotonic time ordering verification ($t_1 > t_0$), transition delta differentials, and sequence quality tracking.
+- **Dual-Mode LSM Inspector:** Interactive unit sphere $S^2(v)$ viewer with orbit camera docked in `VertexControlPanel.tsx` (open by default) and floating canvas HUD in `GeometryViewport.tsx`.
+- **Automated Test Suite:** 10 deterministic test suites, 105 tests passing in $< 60\text{ ms}$.
 
 ### Next Planned Milestones
 - **M4 (Face Geometry & Center Classification):** Implementing the 4-state local face classification relative to origin $O(0,0,0)$.
-- **M6 (Temporal Trace Scrubber):** Adding an interactive timeline to scrub backwards and forwards through user and agent transitions.
+- **M6 Interactive Scrubber UI:** Adding a visual scrub slider for historical state navigation (underlying math implemented in `geometryTemporal.ts`).
 - **M8 (Public Network Protocol):** Exposing JSON-RPC endpoints for autonomous LLM agent benchmarking.

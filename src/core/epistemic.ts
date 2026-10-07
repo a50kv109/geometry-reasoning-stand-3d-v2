@@ -8,6 +8,7 @@
  */
 
 import { EpistemicStatus, EpistemicWrapper } from './types';
+export { EpistemicStatus };
 
 export function wrapEpistemic<T>(
   value: T,

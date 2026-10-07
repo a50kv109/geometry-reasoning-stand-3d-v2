@@ -19,6 +19,7 @@ import { cartesianToSpherical, sphericalToCartesian } from '../core/representati
 import { CameraState, INITIAL_CAMERA, projectWorldPoint, raycastScreenToSphere } from '../visualization/camera';
 import { CausalAnalysis, SelectedElement } from '../visualization/causalModel';
 import { renderScene, RenderOptions, DEFAULT_RENDER_OPTIONS } from '../visualization/renderer3d';
+import { LsmInspector } from './LsmInspector';
 import { 
   Rotate3d, 
   ZoomIn, 
@@ -30,7 +31,8 @@ import {
   Layers,
   CircleDot,
   Scaling,
-  Maximize
+  Maximize,
+  Orbit
 } from 'lucide-react';
 
 interface GeometryViewportProps {
@@ -57,6 +59,7 @@ export const GeometryViewport: React.FC<GeometryViewportProps> = ({
   const [camera, setCamera] = useState<CameraState>(INITIAL_CAMERA);
   const [renderOptions, setRenderOptions] = useState<RenderOptions>(DEFAULT_RENDER_OPTIONS);
   const [hoveredVertexId, setHoveredVertexId] = useState<VertexId | null>(null);
+  const [isFloatingLsmOpen, setIsFloatingLsmOpen] = useState(false);
 
   // Mouse interaction state
   const isDraggingCameraRef = useRef(false);
@@ -287,13 +290,43 @@ export const GeometryViewport: React.FC<GeometryViewportProps> = ({
           </span>
         </div>
 
-        {/* Selected vertex tag */}
+        {/* Selected vertex tag + Quick LVG / LSM Floating Trigger */}
         {selectedElement?.type === 'VERTEX' && (
-          <div className="bg-amber-500/20 backdrop-blur-md border border-amber-500/50 px-3 py-1 rounded-md text-xs text-amber-200">
-            Активная вершина: <strong className="text-amber-400 font-bold">{selectedElement.id}</strong> (перемещайте курсором или ползунками)
+          <div className="flex items-center gap-2">
+            <div className="bg-amber-500/20 backdrop-blur-md border border-amber-500/50 px-3 py-1 rounded-md text-xs text-amber-200">
+              Активная вершина: <strong className="text-amber-400 font-bold">{selectedElement.id}</strong>
+            </div>
+            <button
+              id={`viewport-toggle-lsm-${selectedElement.id}`}
+              onClick={() => setIsFloatingLsmOpen((prev) => !prev)}
+              title="Открыть плавающий глобус локальной угловой геометрии (LSM / LVG) выбранной вершины"
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold backdrop-blur-md transition-all shadow-md ${
+                isFloatingLsmOpen
+                  ? 'bg-sky-500 text-white border border-sky-300 ring-2 ring-sky-400/40'
+                  : 'bg-slate-900/90 hover:bg-slate-800 text-sky-300 border border-sky-600/60'
+              }`}
+            >
+              <Orbit className="w-3.5 h-3.5 text-sky-400" />
+              <span>🌐 Глобус углов {selectedElement.id}</span>
+            </button>
           </div>
         )}
       </div>
+
+      {/* Floating LVG / LSM Inspector Window directly over 3D Viewport */}
+      {isFloatingLsmOpen && selectedElement?.type === 'VERTEX' && (
+        <div
+          id="viewport-floating-lsm-panel"
+          className="absolute top-14 left-4 z-30 w-80 sm:w-96 drop-shadow-2xl max-h-[calc(100%-4.5rem)] overflow-y-auto custom-scrollbar"
+        >
+          <LsmInspector
+            state={state}
+            activeVertexId={selectedElement.id}
+            isFloating={true}
+            onClose={() => setIsFloatingLsmOpen(false)}
+          />
+        </div>
+      )}
 
       {/* Top Right: Viewport Display Toggles */}
       <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-slate-900/80 backdrop-blur-md p-1 rounded-lg border border-slate-800 shadow-lg">

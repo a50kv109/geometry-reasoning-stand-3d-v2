@@ -37,7 +37,8 @@ import {
   AlertTriangle, 
   Sparkles, 
   Layers,
-  Sliders
+  Sliders,
+  Orbit
 } from 'lucide-react';
 
 export default function App() {
@@ -154,6 +155,12 @@ export default function App() {
               <span>Правильный</span>
             </div>
           )}
+
+          {/* LSM / LVG Badge */}
+          <div className="hidden lg:flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-300 border border-sky-500/30 text-[11px] font-mono">
+            <Orbit className="w-3 h-3 text-sky-400" />
+            <span>LSM / LVG</span>
+          </div>
         </div>
       </header>
 

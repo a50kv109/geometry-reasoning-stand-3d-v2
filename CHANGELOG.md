@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] - 2026-10-07 — Dynamic Reasoning & LSM Inspector
+
+### Summary
+Major release introducing the **Dynamic Reasoning Layer** (Local Vertex Geometry, Directed Local Vertex Manifolds, Geometric Diagnostic Snapshots, and strictly monotonic Temporal Transition observation) alongside the interactive **Local Spherical Manifold (LSM) Inspector** supporting dual presence (docked in sidebar and floating on-canvas HUD).
+
+### Added
+- **Local Vertex Geometry (LVG — `src/core/lvg.ts`):**
+  - Incident chord and unit direction rays $\mathbf{u}_{vj} \in S^2(v)$ projected onto the local unit sphere.
+  - $3 \times 3$ Gram matrix and determinant $\det(G)$ quantifying trihedral cone volume.
+  - Planar face angles $\alpha_{jk}$ and dihedral face angles $\theta_{jk}$.
+  - Solid angle $\Omega(v)$ computed via the continuous Oosterom-Strackee spherical excess formula with two-argument arctangent.
+  - Degeneracy classification $D_0$ through $D_5$ using centralized scale-aware tolerances.
+- **Directed Local Vertex Manifolds (DLVM — `src/core/dlvm.ts`):**
+  - Topologically indexed local vertex manifolds for vertices $A, B, C, D$.
+  - Shared-edge anti-parallelism verification $\mathbf{u}_{v_1 v_2}^{(v_1)} = -\mathbf{u}_{v_2 v_1}^{(v_2)}$ across all 6 edge pairs within Package 06 tolerance $\varepsilon_{\text{finite}}(R)$.
+- **Geometric Diagnostic Snapshots (GDS — `src/core/gds.ts`):**
+  - Atomic, read-only diagnostic snapshots combining canonical signatures, global metrics, 4×DLVM, and epistemic statuses with zero reverse-write capability to Canonical State.
+- **Geometry Temporal Observation & Trace Engine (`src/core/geometryTemporal.ts`):**
+  - Strict monotonic temporal transition guard ($t_1 > t_0$); reverse or non-monotonic transitions flagged as `CORRUPTED`.
+  - Differential measurement engine computing $\Delta V_s$, $\Delta S_{\text{total}}$, centroid displacement $\|\Delta G\|$, $\Delta L_{ij}$, and vertex displacements.
+  - Sequence quality tracking (`PRISTINE`, `DEGRADED`, `CORRUPTED`).
+- **Local Spherical Manifold (LSM) Inspector Component (`src/components/LsmInspector.tsx`):**
+  - **Physical Globe on Stand Interaction Model:** Implemented authoritative invariant separation:
+    $$\boxed{\text{Geometry State} = \text{CONSTANT}} \quad \iff \quad \boxed{\text{Observer View Orientation} = \text{MODEL ROTATION IN HANDS}}$$
+  - Miniature globe rendered on a stand with base pedestal, vertical support column, semi-circular meridian mount, axis pins, and North (N) / South (S) poles.
+  - Rigid coordinate grid rotating with the globe body: equator ($\phi = 0^\circ$), latitude parallels ($\pm 30^\circ$, $\pm 60^\circ$), and longitudinal meridians.
+  - Three incident unit vectors $\mathbf{u}_{vj}$ pinned to the rotating globe surface with connecting geodesic spherical triangle arcs.
+  - Multi-modal view orientation controls: direct pointer grab & drag on globe (`↻ ГЛОБУС ↺`), Azimuth (Yaw) slider ($-180^\circ \dots +180^\circ$), Pitch slider ($-85^\circ \dots +85^\circ$), quick presets («Спереди», «Полюс N», «Изо»), and orientation reset `↺`.
+  - Dual presence architecture: embedded in Section 2 of `VertexControlPanel.tsx` (open by default, collapsible via `[ 🌐 Глобус углов {id} ]`) with header «Глобус локальной угловой геометрии — вершина {id}» and floating collapsible HUD directly on the 3D canvas in `GeometryViewport.tsx` via `[ 🌐 Глобус углов {id} ]`.
+  - High-DPI $220 \times 200$ pixel canvas with 3D ambient radial lighting, front-hemisphere highlight, and translucent rear paths.
+  - Unit vector rays with color-coded badges, labels, chord lengths $|e|$, solid angle $\Omega(v)$ via Oosterom-Strackee, and Gram determinant $\det(G)$.
+  - Real-time $60\text{ fps}$ updates synchronized with active vertex drag on the primary 3D viewport.
+- **Automated Verification:**
+  - Added `src/tests/lvg_dlvm_gds_temporal.test.ts` with 10 comprehensive contracts.
+  - Automated test suite expanded to 10 test suites and 105 tests, 100% passing.
+
+---
+
 ## [0.1.0] - 2026-09-13 — First Public Version
 
 ### Summary

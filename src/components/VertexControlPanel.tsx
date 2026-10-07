@@ -8,13 +8,14 @@
  * - Regular tetrahedron is explicitly marked as a SPECIAL STATE, not base object.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { CanonicalGeometryState, VertexId, Point3D } from '../core/types';
 import { CANONICAL_VERTICES } from '../core/topology';
 import { cartesianToSpherical, sphericalToCartesian } from '../core/representation';
 import { createPoint3D, distance3D } from '../core/geometryState';
 import { VERTEX_COLORS } from '../visualization/renderer3d';
-import { Sliders, Sparkles, AlertTriangle, RefreshCw, Compass } from 'lucide-react';
+import { Sliders, Sparkles, AlertTriangle, RefreshCw, Compass, Orbit } from 'lucide-react';
+import { LsmInspector } from './LsmInspector';
 
 interface VertexControlPanelProps {
   state: CanonicalGeometryState;
@@ -38,6 +39,9 @@ export const VertexControlPanel: React.FC<VertexControlPanelProps> = ({
   // Convert radians to degrees for human-friendly editing
   const latDeg = (currentSpherical.phi * 180) / Math.PI;
   const lonDeg = (currentSpherical.lambda * 180) / Math.PI;
+
+  // Local Spherical Manifold (LSM / LVG) Inspector — open by default
+  const [isLsmOpen, setIsLsmOpen] = useState(true);
 
   const handleLatitudeChange = (newLatDeg: number) => {
     // Clamp to [-90, 90]
@@ -147,13 +151,33 @@ export const VertexControlPanel: React.FC<VertexControlPanelProps> = ({
       {/* 2. POSITION CONTROLS (Spherical Lat/Lon + Cartesian R³) */}
       <div className="flex flex-col gap-3 pt-1 border-t border-slate-800/80">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-slate-200 uppercase tracking-wide text-[11px]">
-            2. Положение вершины {activeVertexId}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-slate-200 uppercase tracking-wide text-[11px]">
+              2. Положение вершины {activeVertexId}
+            </span>
+            <button
+              id={`toggle-lsm-btn-${activeVertexId}`}
+              onClick={() => setIsLsmOpen(!isLsmOpen)}
+              title="Открыть/скрыть глобус локальной угловой геометрии (LSM / LVG)"
+              className={`px-2 py-0.5 rounded text-[10px] font-semibold flex items-center gap-1 transition-all ${
+                isLsmOpen
+                  ? 'bg-sky-500 text-white shadow-sm ring-1 ring-sky-300'
+                  : 'bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-800/60'
+              }`}
+            >
+              <Orbit className="w-3 h-3" />
+              <span>🌐 Глобус углов {activeVertexId}</span>
+            </button>
+          </div>
           <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/60">
             |P - O| = {R.toFixed(2)}
           </span>
         </div>
+
+        {/* LSM Inspector when toggled */}
+        {isLsmOpen && (
+          <LsmInspector state={state} activeVertexId={activeVertexId} />
+        )}
 
         {/* Latitude Control */}
         <div className="flex flex-col gap-1 bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80">

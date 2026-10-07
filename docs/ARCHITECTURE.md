@@ -165,3 +165,82 @@ $$\epsilon_Q = c_Q \cdot R^{\operatorname{dim}(Q)}$$
 - Angles ($\mathsf{L}^0$): $\epsilon = 10^{-6} \text{ rad}$
 
 This guarantees that the system behaves identically across any scale from micro-geometry ($R = 10^{-6}$) to astronomical scales ($R = 10^6$).
+
+---
+
+## 10. Dynamic Reasoning Layer
+
+The Dynamic Reasoning Layer extends the deterministic computational core with localized manifold analysis, cross-vertex consistency verification, and causal temporal tracking. All modules are strictly functional and side-effect free:
+
+```text
+                  CanonicalGeometryState (SSOT)
+                                │
+        ┌───────────────────────┼───────────────────────┐
+        ▼                       ▼                       ▼
+  Global Metrics          LVG Engine               Dual Coords
+(V_s, Area, Centroid)   (src/core/lvg.ts)       (Lat / Lon Guides)
+                                │
+                                ▼
+                           DLVM Layer
+                       (src/core/dlvm.ts)
+                                │
+                                ▼
+                            GDS Layer
+                        (src/core/gds.ts)
+                                │
+                                ▼
+                         Temporal Engine
+                  (src/core/geometryTemporal.ts)
+```
+
+### 10.1. Local Vertex Geometry (`src/core/lvg.ts`)
+- **Purpose:** Derives intrinsic geometric invariants at any single vertex $v \in \{A, B, C, D\}$.
+- **Core Quantities:**
+  - Incident chord vectors $\mathbf{e}_{vj} = \mathbf{v}_j - \mathbf{v}$ and unit direction rays $\mathbf{u}_{vj} \in S^2(v)$.
+  - $3 \times 3$ Gram matrix $G_{jk} = \mathbf{u}_{vj} \cdot \mathbf{u}_{vk}$ and determinant $\det(G)$.
+  - Planar face angles $\alpha_{jk} = \arccos(\mathbf{u}_{vj} \cdot \mathbf{u}_{vk})$.
+  - Dihedral face angles $\theta_{jk}$ along each incident edge.
+  - Solid angle $\Omega(v)$ via the continuous Oosterom-Strackee spherical excess formula with two-argument arctangent.
+  - Degeneracy classification $D_0$ through $D_5$ using centralized Package 06 tolerances (`getResolvedTolerances`).
+
+### 10.2. Directed Local Vertex Manifold (`src/core/dlvm.ts`)
+- **Purpose:** Organizes the local vertex frame into a topologically indexed Directed Local Vertex Manifold.
+- **Shared-Edge Anti-Parallelism Invariant:**
+  $$\mathbf{u}_{v_1 v_2}^{(v_1)} = -\mathbf{u}_{v_2 v_1}^{(v_2)}$$
+  The engine verifies this identity across all 6 pairs of vertices against $\varepsilon_{\text{finite}}(R)$.
+
+### 10.3. Geometric Diagnostic Snapshot (`src/core/gds.ts`)
+- **Purpose:** Atomic diagnostic aggregation combining:
+  - Canonical 32-bit FNV-1a signature.
+  - Global metrics (volume, surface area, centroid).
+  - 4 localized DLVMs ($A, B, C, D$).
+  - Shared-edge consistency validation result.
+  - Epistemic status tracking (`EpistemicStatus.DERIVED`).
+  - Degeneracy flags (`VOLUME_DEGENERATE`, `VERTEX_*`, `SHARED_EDGE_INCONSISTENCY`).
+- **Guarantee:** Zero reverse-write capability to Canonical State.
+
+### 10.4. Temporal Observation & Trace Engine (`src/core/geometryTemporal.ts`)
+- **Purpose:** Observes state transitions over time without mutating geometry.
+- **Monotonic Time Guard:** Enforces $t_1 > t_0$; transitions where $\Delta t \le 0$ are marked `CORRUPTED`.
+- **Differential Measurement:** Evaluates $\Delta V_s$, $\Delta S_{\text{total}}$, centroid displacement $\|\Delta G\|$, per-edge delta lengths $\Delta L_{ij}$, and per-vertex displacements $\|\Delta V_i\|$.
+- **Temporal Quality:** Tracks sequence integrity (`PRISTINE`, `DEGRADED`, `CORRUPTED`).
+
+---
+
+## 11. Interactive LSM Inspector Component (`src/components/LsmInspector.tsx`)
+
+The **Глобус локальной угловой геометрии** (архитектурно: **Local Spherical Manifold (LSM) Inspector**) provides real-time human visualization for the LVG layer:
+- **Two-Tier Naming Architecture:**
+  - **Человеко-ориентированный UI:** Кнопка **`[ 🌐 Глобус углов {id} ]`**, заголовок панели **«Глобус локальной угловой геометрии — вершина {id}»** (подзаголовок `LVG / LSM · {id}`). Фокус на локальной угловой структуре вершины (направления рёбер, плоские углы, ориентация, телесный угол).
+  - **Математический код:** `LsmInspector.tsx`, `lvg.ts`, `computeLVG()`.
+- **Physical Globe on Stand Model:**
+  $$\boxed{\text{Geometry State} = \text{CONSTANT}} \quad \iff \quad \boxed{\text{Observer View Orientation} = \text{MODEL ROTATION IN HANDS}}$$
+  - **Intrinsic Geometry Invariance:** Unit rays $\mathbf{u}_{vj}$, Gram determinant $\det(G)$, planar angles $\alpha_{jk}$, dihedral angles $\theta_{jk}$, and solid angle $\Omega(v)$ are immutable properties of the tetrahedron's current state.
+  - **Rigid Model Rotation:** The user turns the physical globe on its stand (meridian mount, poles $N$ and $S$, equator, parallels, meridians, and pinned landmark rays rotate rigidly together) via direct canvas drag, Azimuth (Yaw) slider, Pitch slider, or presets («Спереди», «Полюс N», «Изо», «↺»).
+- **Dual Presence Integration:**
+  1. **Embedded:** Docked in Section 2 of `VertexControlPanel.tsx` (open by default, collapsible via `[ 🌐 Глобус углов {id} ]`).
+  2. **Floating HUD:** Overlaid directly on the 3D canvas in `GeometryViewport.tsx`, toggled via the `[ 🌐 Глобус углов {id} ]` HUD button.
+- **Interactive Globe Canvas:** $220 \times 200$ px high-DPI canvas projecting local sphere $S^2(v)$ with 3D depth-sorting, ambient radial shading, and axis pins.
+- **Dynamic Updates:** Continuously recalculates during vertex dragging at $60\text{ fps}$.
+- **Strict SSOT Pipeline & Zero Mutation:** Evaluated as a pure read-only deterministic projection from `CanonicalGeometryState`. Orientation changes affect zero geometric state.
+

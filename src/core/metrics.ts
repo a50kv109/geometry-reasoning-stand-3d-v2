@@ -69,6 +69,10 @@ export function crossProduct3D(u: Point3D, v: Point3D): Point3D {
 /**
  * Computes vector difference: p2 - p1
  */
+export function dotProduct3D(u: Point3D, v: Point3D): number {
+  return u.x * v.x + u.y * v.y + u.z * v.z;
+}
+
 export function vectorSubtract(p2: Point3D, p1: Point3D): Point3D {
   return {
     x: p2.x - p1.x,
@@ -77,12 +81,13 @@ export function vectorSubtract(p2: Point3D, p1: Point3D): Point3D {
   };
 }
 
-/**
- * Computes vector norm: ||v||
- */
+export const vectorSubtract3D = vectorSubtract;
+
 export function vectorNorm(v: Point3D): number {
   return Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
+
+export const vectorNorm3D = vectorNorm;
 
 /**
  * Computes triangle area given 3 points

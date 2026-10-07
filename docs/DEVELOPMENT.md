@@ -44,14 +44,19 @@ The project uses TypeScript for type safety and Vite for bundle generation:
 All tests are implemented in TypeScript and run headlessly using `tsx`:
 
 ```bash
-# Run all automated test suites
+# Run all automated test suites (10 suites, 105 tests)
 npm run test:all
 
 # Run individual test suites:
-npm run test:m1       # M1 Canonical Geometry State suite (17 tests)
-npm run test:client   # M1.5 Visual Client synchronization suite (10 tests)
-npm run test:layout   # M1.6 Workspace Layout & Ergonomics suite (7 tests)
-npx tsx src/tests/m1_7_scale_and_guides.test.ts # M1.7 Scale & Guides suite (16 tests)
+npm run test:m1        # M1 Canonical Geometry State suite (17 tests)
+npm run test:client    # M1.5 Visual Client synchronization suite (10 tests)
+npm run test:layout    # M1.6 Workspace Layout & Ergonomics suite (7 tests)
+npm run test:guides    # M1.7 Scale & Guides suite (16 tests)
+npm run test:lvg       # M1.8 Dynamic Reasoning LVG/DLVM/GDS suite (10 tests)
+npm run test:scale     # PAT-27 Scale Invariance suites (12 tests)
+npm run test:metrics   # Regular tetrahedron metric suite (5 tests)
+npm run test:epistemic # Epistemic orthogonality suite (7 tests)
+npm run test:agent     # Agent readiness smoke contracts (11 tests)
 ```
 
 ---
@@ -61,7 +66,13 @@ npx tsx src/tests/m1_7_scale_and_guides.test.ts # M1.7 Scale & Guides suite (16 
 ```text
 ├── docs/                                # Architecture & public documentation
 │   ├── architecture-packages/           # Archival records of Transfer Packages 01–06
-│   ├── ARCHITECTURE.md                  # System overview and state model
+│   ├── research/                        # Dynamic reasoning specifications
+│   │   ├── DYNAMIC_REASONING_ARCHITECTURE.md
+│   │   ├── LVG_001.md
+│   │   ├── DLVM_001.md
+│   │   └── GDS_AND_TEMPORAL.md
+│   ├── ARCHITECTURE.md                  # System overview, state model, dynamic reasoning
+│   ├── LSM_INSPECTOR.md                 # Local Spherical Manifold Inspector specification
 │   ├── GEOMETRIC_MODEL.md               # S², tetrahedron, signed volume, regularity
 │   ├── INTERACTION.md                   # 3D viewport, guides, scale, and controls
 │   ├── REASONING_MODEL.md               # Causal dependencies and recomputation oracle
@@ -70,14 +81,31 @@ npx tsx src/tests/m1_7_scale_and_guides.test.ts # M1.7 Scale & Guides suite (16 
 │   ├── DEVELOPMENT.md                   # Build, test, and development instructions
 │   └── ROADMAP.md                       # M0 through M10 milestone status
 ├── src/
-│   ├── core/                            # Authoritative Mathematical Core (Frozen)
+│   ├── core/                            # Authoritative Mathematical Core
 │   │   ├── geometryState.ts             # Canonical state creation, validation, volume
 │   │   ├── metrics.ts                   # Chords, areas, normals, centroid, regularity
 │   │   ├── representation.ts            # Dual spherical ↔ Cartesian coordinate converter
 │   │   ├── signature.ts                 # FNV-1a metadata-free geometry signature
 │   │   ├── tolerances.ts                # Package 06 centralized scale-aware tolerances
 │   │   ├── topology.ts                  # Persistent 4V / 6E / 4F combinatorial topology
-│   │   └── types.ts                     # Core TypeScript geometric interfaces and enums
+│   │   ├── types.ts                     # Core TypeScript geometric interfaces and enums
+│   │   ├── lvg.ts                       # Local Vertex Geometry (Gram, Ω, planar/dihedral angles)
+│   │   ├── dlvm.ts                      # Directed Local Vertex Manifold (shared-edge anti-parallelism)
+│   │   ├── gds.ts                       # Geometric Diagnostic Snapshot (SSOT isolated)
+│   │   ├── geometryTemporal.ts          # Strictly monotonic temporal transitions
+│   │   ├── epistemic.ts                 # Fact, hypothesis, and provenance wrappers
+│   │   └── agentInterface.ts            # Headless claim evaluation oracle boundary
+│   ├── visualization/                   # 3D Canvas Rendering & Causal Projection
+│   │   └── renderer3d.ts                # Perspective canvas projection, depth sorting, guides
+│   ├── components/                      # React Workstation Components
+│   │   ├── GeometryViewport.tsx         # 3D viewport with camera orbit & floating LSM HUD trigger
+│   │   ├── LsmInspector.tsx             # Dual-mode Local Spherical Manifold inspector
+│   │   ├── VertexControlPanel.tsx       # Coordinate controls & embedded LSM inspector
+│   │   ├── MeasurementPanel.tsx         # Metric display & orientation indicators
+│   │   ├── LearningPanel.tsx            # Pedagogical causal reasoning narrative
+│   │   ├── AgentTestPanel.tsx           # Untrusted agent claim test harness
+│   │   └── DebugPanel.tsx               # Canonical coordinate and tolerance inspector
+│   └── tests/                           # 10 Deterministic Automated Test Suites
 │   ├── visualization/                   # 3D Canvas Rendering & Causal Projection
 │   │   ├── camera.ts                    # Orbit camera state and view transforms
 │   │   ├── causalModel.ts               # Incident vs invariant neighborhood calculations
