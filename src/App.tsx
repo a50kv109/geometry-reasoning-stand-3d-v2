@@ -31,6 +31,7 @@ import { LearningPanel } from './components/LearningPanel';
 import { VertexControlPanel } from './components/VertexControlPanel';
 import { DebugPanel } from './components/DebugPanel';
 import { AgentTestPanel } from './components/AgentTestPanel';
+import { AgentConsole } from './components/AgentConsole';
 import { 
   Box, 
   CheckCircle2, 
@@ -224,14 +225,22 @@ export default function App() {
               state={canonicalState}
             />
 
-            {/* 7. AGENT BOUNDARY & ORACLE VERIFICATION */}
+            {/* 7. AGENT GATEWAY & ORACLE EXPERIMENT CONSOLE (v0.1) */}
+            <AgentConsole
+              canonical={canonicalState}
+              representation={repState}
+              validation={validation}
+              onApplyStateToHumanScene={(newVertices) => setVertices(newVertices)}
+            />
+
+            {/* 8. AGENT BOUNDARY & ORACLE VERIFICATION (SMOKE) */}
             <AgentTestPanel
               canonical={canonicalState}
               representation={repState}
               validation={validation}
             />
 
-            {/* 8. ENGINEERING DIAGNOSTICS (COLLAPSIBLE ACCORDION) */}
+            {/* 9. ENGINEERING DIAGNOSTICS (COLLAPSIBLE ACCORDION) */}
             <DebugPanel
               canonicalState={canonicalState}
               validation={validation}

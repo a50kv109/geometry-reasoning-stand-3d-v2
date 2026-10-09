@@ -244,3 +244,88 @@ The **Глобус локальной угловой геометрии** (ар�
 - **Dynamic Updates:** Continuously recalculates during vertex dragging at $60\text{ fps}$.
 - **Strict SSOT Pipeline & Zero Mutation:** Evaluated as a pure read-only deterministic projection from `CanonicalGeometryState`. Orientation changes affect zero geometric state.
 
+---
+
+## 12. Agent Gateway & Command Layer (`src/core/agentGateway.ts`)
+
+The Agent Gateway provides an untrusted client boundary and deterministic execution oracle:
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                        AI AGENT / CLIENT REQUEST                       │
+│      inspect_passport │ query_metric │ verify_claim │ perturb ...      │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                 AGENT GATEWAY DISPATCHER & VALIDATION                  │
+│  - Parameter structural validation (discriminated union)               │
+│  - Reference state resolution (defaults to active state)               │
+│  - Rejection of malformed / unsupported commands                       │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                 CANONICAL GEOMETRY & ORACLE EVALUATION                 │
+│  - Pure function execution: metrics.ts, symmetry.ts, construction.ts  │
+│  - Receiver-owned tolerances: getResolvedTolerances(R)                 │
+│  - Mathematical residual & truth evaluation                           │
+└──────────────────┬─────────────────────────────────┬───────────────────┘
+                   │                                 │
+                   ▼                                 ▼
+┌──────────────────────────────────────┐ ┌───────────────────────────────┐
+│       BRANCHED STATE REGISTRY        │ │      EXPERIMENT LEDGER        │
+│  Stores isolated resulting states    │ │  Chronological append-only log│
+│  (No silent human scene mutation)    │ │  Structured EvidenceRecords   │
+└──────────────────────────────────────┘ └───────────────────────────────┘
+```
+
+### Gateway Responsibilities:
+1. **Command Dispatcher:** Routes 9 typed commands defined in `src/core/gatewayTypes.ts`.
+2. **Branch State Registry:** Caches resulting geometry states from constructions, perturbations, and symmetry transforms by signature, leaving the human scene intact.
+3. **Evidence Oracle:** Validates agent claims against authoritative calculations using receiver-owned tolerances.
+4. **Ledger Management:** Records every experiment with inputs, outputs, tolerances, and verdicts.
+
+---
+
+## 13. Experiment Ledger & Evidence Records
+
+Every claim verification executed via `verify_claim` produces an immutable proof record (`EvidenceRecord`):
+- **Epistemic Classification:** Orthogonal `VERIFIED`, `REFUTED`, `INVALID_INPUT`, or `UNSUPPORTED_OPERATION`.
+- **Tolerance Traceability:** Logs exact linear, angular, and volumetric epsilons applied.
+- **Mathematical Evidence:** Records exact actual values, claimed values, and numerical residuals.
+- **Reproducibility Guarantee:** Executing the identical verification with identical inputs reproduces identical evidence.
+
+---
+
+## 14. User Interface & Agent Console Component
+
+The user workstation layout pairs the human visual interface with the autonomous agent tooling:
+1. **Human Visual Workstation:**
+   - **`GeometryViewport.tsx`:** Interactive 3D canvas viewport (~65% width) with orbit camera, depth-sorted faces, coordinate guides, and floating LSM HUD.
+   - **Sidebar Panels (~35% width):** `VertexControlPanel.tsx` (Cartesian and spherical lat/lon controls), `MeasurementPanel.tsx` (metrics, volume, orientation), `DebugPanel.tsx` (raw coordinates, tolerances, signature).
+2. **Agent Console (`src/components/AgentConsole.tsx`):**
+   - **Presets:** Quick execution of standard agent commands (passport inspection, $C_3$ rotation, central inversion, symmetry breaking, regularity query).
+   - **JSON Console:** Direct structured command editor supporting full JSON payloads with syntax error feedback.
+   - **Passport View:** Dual inspection of Object Identity (PGO-3D) and State-Specific Symmetry Passport (PSS-3D).
+   - **Ledger View:** Interactive log of past experiments with verdict filters and detailed residual inspections.
+   - **Explicit Scene Injection:** Optional «Показать в 3D сцене» button to manually promote an agent experiment state to the human workstation viewport.
+
+---
+
+## 15. Subsystem Authority & Dependency Flow
+
+| Subsystem | Authority Level | Primary Source | Dependencies |
+| :--- | :--- | :--- | :--- |
+| **Canonical State** | **AUTHORITATIVE** | `geometryState.ts` | `types.ts`, `tolerances.ts` |
+| **Topology** | **AUTHORITATIVE** | `topology.ts` | `types.ts` |
+| **Tolerances** | **AUTHORITATIVE** | `tolerances.ts` | None |
+| **Metrics & LVG** | **DERIVED** | `metrics.ts`, `lvg.ts` | Canonical State, Tolerances |
+| **DLVM & GDS** | **DERIVED** | `dlvm.ts`, `gds.ts` | Metrics, LVG, Topology |
+| **Representation** | **DERIVED** | `representation.ts` | Canonical State |
+| **Signatures** | **DERIVED** | `signature.ts` | Canonical State |
+| **Temporal Engine** | **DERIVED** | `geometryTemporal.ts`| Canonical State, Signatures |
+| **Agent Gateway** | **ORACLE BOUNDARY**| `agentGateway.ts` | Canonical State, Metrics, Symmetry, Construction |
+| **Renderer & UI** | **PRESENTATION** | `renderer3d.ts`, `App.tsx`| Representation, Viewport, Gateway |
+
+

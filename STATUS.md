@@ -2,8 +2,8 @@
 
 **Current Operational Status:** EXPERIMENTALLY STABLE / RESEARCH READY  
 **Authoritative Object:** General Tetrahedron Inscribed in $S^2(O, R)$  
-**Milestones Implemented & Verified:** M1, M1.5, M1.6, M1.7, M1.8 (Dynamic Reasoning & LSM Inspector), PAT-27 (Scale Dependency), Agent Readiness Boundary  
-**Test Verification:** 10 suites, 105 tests passing, 0 failures (`npm run test:all`)
+**Milestones Implemented & Verified:** M1, M1.5, M1.6, M1.7, M1.8 (Dynamic Reasoning & LSM Inspector), PAT-27 (Scale Dependency), Agent Readiness Boundary, Agent Gateway v0.1, Replication Manifest & Golden Reference Baseline  
+**Test Verification:** 12 suites, 124+ tests passing, 0 failures (`npm run test:all`, `npm run test:golden`)
 
 ---
 
@@ -17,7 +17,7 @@
 
 3. **Agent Boundary:**
    *"Agent may be wrong. Stand must not."*
-   External AI agents submit claims as hypotheses; the Stand evaluates ground truth against canonical state.
+   External AI agents submit claims as hypotheses; the Stand evaluates ground truth against canonical state using receiver-owned tolerances.
 
 4. **PAT-27 Scale Invariance:**
    Scaling laws $L \propto R$, $A \propto R^2$, $V \propto R^3$, $\theta \propto R^0$ are mathematically enforced and verified.
@@ -41,10 +41,14 @@
 - `gds.ts`: Geometric Diagnostic Snapshots aggregating metrics, 4×DLVM, and epistemic state with zero mutations.
 - `geometryTemporal.ts`: Strict monotonic temporal transitions ($t_1 > t_0$), differential measurements, and sequence quality tracking (`PRISTINE`, `DEGRADED`, `CORRUPTED`).
 
-### 3. Epistemic & Agent Reasoner (`src/core/`)
+### 3. Epistemic & Agent Gateway Core (`src/core/`)
 - `epistemic.ts`: Epistemic status types, hypothesis tagging, and evidence provenance.
 - `agentInterface.ts`: Headless claim evaluation engine (`VERIFY_RESULT`, `VERIFY_STEP`).
 - `derivedSemantics.ts`: Derived semantic impact models and incident branch isolation.
+- `symmetry.ts`: Pure isometries ($O(3) \rtimes \mathbb{R}^3$), Rodrigues rotation, and vertex set comparison (`compareVertexSets`).
+- `construction.ts`: Deterministic object constructions (`constructRegularTetrahedron`, `constructExplicitTetrahedron`, `constructPerturbedTetrahedron`).
+- `gatewayTypes.ts`: Typed discriminated unions for 9 agent commands, Object Passport (PGO-3D), Symmetry Passport (PSS-3D), Evidence Records, and Ledger.
+- `agentGateway.ts`: Authoritative gateway implementation, command dispatching, state branch registry, and deterministic verification oracle.
 
 ### 4. Interactive Human Visual Workbench (`src/components/`, `src/visualization/`)
 - `renderer3d.ts`: Canvas 3D rendering pipeline with depth sorting, coordinate guides, and vertex color badges.
@@ -54,5 +58,6 @@
 - `MeasurementPanel.tsx`: Live chord lengths, face areas, signed volume, and orientation classification.
 - `LearningPanel.tsx`: Educational reasoning narrative explaining causal dependencies and invariant subgraphs.
 - `AgentTestPanel.tsx`: Interactive agent claim verification testing tool.
+- `AgentConsole.tsx`: Workstation Agent Console supporting 9 commands, presets, JSON editing, passport inspection, and experiment replay.
 - `DebugPanel.tsx`: Raw canonical state inspection, scaled tolerance breakdown, and geometry signatures.
 

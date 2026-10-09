@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.2] - 2026-10-09 — Replication Manifest, Golden Benchmarks & Agent Gateway v0.1
+
+### Summary
+Comprehensive consolidation of the **Replication Manifest & Runbook** (`REPLICATION_MANIFEST.md`), **Golden Reference Benchmark Suite** (`src/tests/golden_reference_snapshot.test.ts`), and full Fedorov symmetry classification integration in **Agent Gateway v0.1** (State-Specific Symmetry Passport PSS-3D with full $T_d$ group evaluation, order 24, and explicit inversion non-invariance).
+
+### Added
+- **Authoritative Replication Manifest (`REPLICATION_MANIFEST.md`):**
+  - Complete 6-point replication matrix (Source code, dependencies lockfiles `package-lock.json` and `bun.lock`, Vite/TypeScript/Tailwind build configs, 12 test suites, runbook, golden benchmarks).
+  - Step-by-step verified execution runbook (`clone -> install -> test -> dev -> verify`).
+  - Closed-form analytical ground truth constants for regular tetrahedron ($a = \frac{4}{\sqrt{6}}$, $S_F = \frac{2\sqrt{3}}{3}$, $V_s = \frac{8\sqrt{3}}{27}$, $\Omega = 3\arccos(1/3)-\pi$, $\det(G) = 0.5$, full group $T_d$ order 24, proper rotation subgroup $T$ order 12, zero central inversion).
+- **Golden Reference Benchmark Suite (`src/tests/golden_reference_snapshot.test.ts`):**
+  - 5 exhaustive analytical benchmarks verifying machine-epsilon accuracy across ground truth Euclidean invariants, Fedorov group classification, perturbation-induced symmetry breaking to $C_1$, scale invariance, and Agent Gateway programmatic oracle assertions.
+- **Runnable Example Scripts:**
+  - `examples/gatewayQuickstart.ts`: End-to-end headless demonstration of Agent Gateway v0.1 (`inspect_passport`, `inspect_symmetry_passport`, `verify_claim`, `perturb_geometry`, and ledger audit).
+  - `examples/agentQuickstart.ts`: Stand Oracle claim verification demo.
+  - `examples/dynamicSimulationExperiment.ts`: Numerical simulation, transition states, and scale experiments.
+- **Agent Gateway v0.1 & Symmetry Passport (PSS-3D):**
+  - State-specific `SymmetryPassport` strictly decoupled from `ObjectPassport` (PGO-3D), canonical state, claims, and evidence records.
+  - Support for `inspect_symmetry_passport` command with `evaluateFullGroup: true` generating complete $T_d$ / $C_1$ point group classifications and inversion testing.
+  - Preset 9 added to the interactive Agent Console in the human visual workbench.
+- **Lockfile Synchronization:**
+  - Added `package-lock.json` alongside `bun.lock` for 100% deterministic dependency trees in both npm and Bun environments.
+  - Total automated verification expanded to 12 test suites and 124+ assertions (0 failures).
+
+---
+
 ## [0.2.0] - 2026-10-07 — Dynamic Reasoning & LSM Inspector
 
 ### Summary

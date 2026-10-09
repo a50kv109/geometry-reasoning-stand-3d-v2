@@ -12,7 +12,13 @@ Welcome to the documentation for the **Dynamic 3D Geometry Reasoning Stand**, a 
 
 ### System Architecture & State Model
 * **[System Architecture](ARCHITECTURE.md)**: Comprehensive architectural specification, three-layer state model (Geometry, Representation, Visualization), and pipeline data flow.
+* **[Object Passport & State](OBJECT_PASSPORT_AND_STATE.md)**: Topological object identity, canonical Cartesian state, snapshots, and state-specific symmetry passports.
 * **[Geometric Model](GEOMETRIC_MODEL.md)**: Mathematical formulation of sphere $S^2(O, R)$, general inscribed tetrahedron, metrics (chords, areas, signed volume, centroid), orientation, and the regularity invariant.
+
+### Agent Gateway & Verification
+* **[Agent Gateway v0.1 Specification](AGENT_GATEWAY.md)**: Command catalogs, dispatcher architecture, state branch isolation, and programmatic usage.
+* **[Verification Model & Evidence Records](VERIFICATION_AND_EVIDENCE.md)**: Verification predicates, receiver-owned tolerances, mathematical residuals, and proof reproducibility.
+* **[System Status & Known Limitations](STATUS_AND_LIMITATIONS.md)**: Feature implementation matrix, test baseline, and known numerical/architectural constraints.
 
 ### Human Interaction & Reasoning
 * **[User Interaction & Visual Workbench](INTERACTION.md)**: Viewport controls, visual scale factor, direct on-sphere raycasting, per-vertex coordinate guides, and the 7-section information flow.
